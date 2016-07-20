@@ -10,5 +10,11 @@ def index():
 
 
 @app.route('/couriers')
-def courires():
-    return "Couriers Page"
+def courier_list():
+    return "Courier list Page"
+
+
+
+@app.route()
+def courier_detail():
+    return "Courier Detail"
