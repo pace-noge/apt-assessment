@@ -6,39 +6,44 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
-    password = db.column(db.String)
-    is_active = db.Column(db.Boolean, default=False)
+    password = db.Column(db.String(255))
+    active = db.Column(db.Boolean, default=False)
     authenticated = db.Column(db.Boolean, default=False)
+    admin = db.Column(db.Boolean, default=False)
 
-    @property
+
     def is_authenticated(self):
         return self.authenticated
 
-    @property
-    def is_active(self):
-        return self.is_active
 
-    @property
+    def is_active(self):
+        return self.active
+
+
     def is_anonymous(self):
         return False
 
-    @property
+
     def get_id(self):
         return str(self.id)
+
+    def is_admin(self):
+        return self.admin
 
     def __repr__(self):
         return '<User %r>' % (self.username)
 
-    def _set_password(self, password):
-        self.password = generate_password_hash(password)
+    def set_password(self, password):
+        return generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
     def __init__(self, **kwargs):
-        hashed_password = self._set_password(kwargs['password'])
-        kwargs['password'] = hashed_password
-        return super().__init__(**kwargs)
+        pw_hash = self.set_password(kwargs['password'])
+        kwargs['password'] = pw_hash
+        print(kwargs)
+        super().__init__(**kwargs)
 
 
 class MetaDataMixin(object):
