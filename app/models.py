@@ -25,7 +25,7 @@ class User(db.Model):
 
 
     def get_id(self):
-        return str(self.id)
+        return self.id
 
     def is_admin(self):
         return self.admin
@@ -89,7 +89,6 @@ class MetaDataMixin(object):
 
 class Courier(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(64), index=True)
     address = db.Column(db.Text)
     available_time_start = db.Column(db.Time)
