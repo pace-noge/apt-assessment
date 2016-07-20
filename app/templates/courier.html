@@ -19,10 +19,76 @@
       <td class="mdl-data-table__cell">
           {{ courier.available_time_start }} - {{ courier.available_time_stop }}
       </td>
-      <td class="mdl-data-table__cell"><i class="material-icons">mode_edit</i>&nbsp;<i class="material-icons">delete</i></td>
+      <td class="mdl-data-table__cell">
+          <div id="edit_courier_{{ courier.id }}" class="material-icons">
+              mode_edit
+          </div>
+          <div class="mdl-tooltip" for="edit_courier_{{ courier.id }}">
+              Edit {{ courier.name }}
+          </div> &nbsp;
+          <div id="delete_courier_{{ courier.id }}" class="material-icons">delete
+          </div>
+          <div class="mdl-tooltip" for="delete_courier_{{ courier.id }}">
+              Delete {{ courier.name }}
+          </div>
+          </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 
+<dialog class="mdl-dialog">
+    <form action="" method="post" name="courier">
+    <div class="mdl-dialog__content">
+                    {{ form.hidden_tag() }}
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        {{ form.name(class_="mdl-textfield__input") }}
+                        <label class="mdl-textfield__label" for="sample1">{{ form.name.label.text }}</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        {{ form.address(class_="mdl-textfield__input") }}
+                        <label class="mdl-textfield__label" for="sample1">{{ form.address.label.text }}</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        {{ form.available_time_start(class_="mdl-textfield__input") }}
+                        <label class="mdl-textfield__label">
+                           {{ form.available_time_start.label.text }}
+                        </label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        {{ form.available_time_stop(class_="mdl-textfield__input") }}
+                        <label class="mdl-textfield__label">
+                           {{ form.available_time_stop.label.text }}
+                        </label>
+                    </div>
+
+    </div>
+    <div class="mdl-dialog__actions mdl-dialog__actions">
+      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Save</button>
+      <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect close">Cancel</button>
+    </div>
+    </form>
+  </dialog>
+
+  <button id="view-source" class="mdl-button mdl-button--fab mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white show-modal"><i class="material-icons">add</i><span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 255.952px; height: 255.952px; transform: translate(-50%, -50%) translate(26px, 19px);"></span></span></button>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var dialog = document.querySelector('dialog');
+    var showModalButton = document.querySelector('.show-modal');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showModalButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+  </script>
 {% endblock %}

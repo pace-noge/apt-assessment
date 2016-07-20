@@ -40,7 +40,7 @@ def courier_list():
     if form.validate_on_submit():
         pass
     couriers = Courier.query.all()
-    return render_template('courier.html', page_title="Couriers", couriers=couriers)
+    return render_template('courier.html', page_title="Couriers", couriers=couriers, form=form)
 
 
 @app.route('/logout')
