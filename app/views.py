@@ -1,6 +1,6 @@
 from app import app, db, lm
 from .forms import LoginForm, CourierForm
-from .models import User, Courier, Item, DeliveryJob
+from .models import User, Courier, DeliveryJob
 from datetime import time as d_time
 import time
 from flask import render_template, flash, redirect

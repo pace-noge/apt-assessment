@@ -99,16 +99,6 @@ class Courier(MetaDataMixin, db.Model):
         return '<Courier %r>' % (self.name)
 
 
-class Item(MetaDataMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    item_type = db.Column(db.String)
-    weight = db.Column(db.Integer)
-    width = db.Column(db.Integer)
-    length = db.Column(db.Integer)
-    height = db.Column(db.Integer)
-
-
 
 class DeliveryJob(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
