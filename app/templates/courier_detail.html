@@ -2,27 +2,57 @@
 
 {% block content %}
 
-<!-- <div class="demo-card-wide mdl-card mdl-shadow--2dp mdl-grid">
-  <div class="mdl-card__title">
-    <h2 class="mdl-card__title-text">Welcome</h2>
-  </div>
-  <div class="mdl-card__supporting-text">
-    <ul>
-        <li>{{ courier.name }}</li>
-         <li>{{ courier.address }}</li>
-        </ul>
-  </div>
-  <div class="mdl-card__actions mdl-card--border">
-    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-      Get Started
-    </a>
-  </div>
-  <div class="mdl-card__menu">
-    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-      <i class="material-icons">share</i>
-    </button>
-  </div>
-</div> -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                <h3 class="profile-username text-left">
+                    {{ courier.name }}
+                </h3>
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                        <b>Address</b>
+                        <a class="pull-right">
+                            {{ courier.address }}
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <b>Available Time</b>
+                        <a class="pull-right">
+                            {{ courier.available_time_start }} - {{ courier.available_time_stop }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">
+                    History
+                </h3>
+            </div>
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Pick Up Location</th>
+                            <th>Pick Up address Info</th>
+                            <th>Pick Up time</th>
+                            <th>Drop Off Location</th>
+                            <th>Drop Off address info</th>
+                            <th>Delivered time</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{ form.name }}
 

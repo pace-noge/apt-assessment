@@ -93,6 +93,7 @@ class Courier(MetaDataMixin, db.Model):
     address = db.Column(db.Text)
     available_time_start = db.Column(db.Time)
     available_time_stop = db.Column(db.Time)
+    delivery_jobs = db.relationship('DeliveryJob', backref='courier', lazy='dynamic')
 
     def __repr__(self):
         return '<Courier %r>' % (self.name)
@@ -114,5 +115,11 @@ class DeliveryJob(MetaDataMixin, db.Model):
     courier = db.Column(db.Integer, db.ForeignKey('courier.id'))
     pickup_address = db.column(db.String(120))
     pickup_address_additional_info = db.Column(db.Text)
+    pickup_time = db.Column(db.DateTime)
     drop_off_address = db.Column(db.String(120))
     drop_off_additional_info = db.Column(db.Text)
+    delivered_time = db.Column(db.DateTime)
+    item = db.Column(db.Text)
+
+    def __repr__(self):
+        return "<DeliveyJob %r>" % self.courier
