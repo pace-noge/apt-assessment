@@ -11,6 +11,7 @@ class User(db.Model):
     authenticated = db.Column(db.Boolean, default=False)
     items = db.relationship('Item', backref='items', lazy='dynamic')
     delivery_jobs = db.relationship('DeliveryJob', backref='delivery_jobs', lazy='dynamic')
+    courier = db.relationship('Courier', backref='courier', lazy='dynamic')
 
     @property
     def is_authenticated(self):
@@ -43,15 +44,39 @@ class MetaDataMixin(object):
 
     @declared_attr
     def creator_id(cls):
-        return db.Column('creator', db.ForeignKey('user.id'))
+        return db.Column(
+            db.Integer,
+            db.ForeignKey(
+                'user.id',
+                name='fk_%s_creator_id' % cls.__name__,
+                use_alter=True,
+            )
+        )
+
+    @declared_attr
+    def creator(cls):
+        return db.relationship(
+            'User',
+            primaryjoin='User.id == %s.creator_id' % cls.__name__,
+            remote_side='User.id')
 
     @declared_attr
     def last_modified_by_id(cls):
-        return db.Column('last_modified_by', db.ForeignKey('user.id'))
+        return db.Column(
+            db.Integer,
+            db.ForeignKey(
+                'user.id',
+                name='fk_%s_last_modified_by_id' % cls.__name__,
+                use_alter=True
+            )
+        )
 
     @declared_attr
-    def user(cls):
-        return db.relationship("User")
+    def last_modified_by(cls):
+        return db.relationship(
+            'User',
+            primaryjoin='User.id == %s.last_modified_by_id' % cls.__name__,
+            remote_side='User.id' )
 
 
 class Courier(MetaDataMixin, db.Model):
@@ -74,11 +99,6 @@ class Item(MetaDataMixin, db.Model):
     width = db.Column(db.Integer)
     length = db.Column(db.Integer)
     height = db.Column(db.Integer)
-    creator = db.relationship('User', foreign_keys='Item.creator_id')
-    last_modified_by = db.relationship(
-        'User',
-        foreign_keys='Item.last_modified_by_id'
-    )
 
 
 
@@ -89,8 +109,3 @@ class DeliveryJob(MetaDataMixin, db.Model):
     pickup_address_additional_info = db.Column(db.Text)
     drop_off_address = db.Column(db.String(120))
     drop_off_additional_info = db.Column(db.Text)
-    creator = db.relationship('User', foreign_keys='Item.creator_id')
-    last_modified_by = db.relationship(
-        'User',
-        foreign_keys='Item.last_modified_by_id'
-    )
