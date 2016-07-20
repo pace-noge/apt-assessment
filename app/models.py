@@ -1,12 +1,16 @@
 from app import db
 from sqlalchemy.ext.declarative import declared_attr
+from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True)
     password = db.column(db.String)
     is_active = db.Column(db.Boolean)
     authenticated = db.Column(db.Boolean, default=False)
+    items = db.relationship('Item', backref='items', lazy='dynamic')
+    delivery_jobs = db.relationship('DeliveryJob', backref='delivery_jobs', lazy='dynamic')
 
     @property
     def is_authenticated(self):
@@ -20,23 +24,29 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
+    @property
     def get_id(self):
         return str(self.id)
 
     def __repr__(self):
         return '<User %r>' % (self.username)
 
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 class MetaDataMixin(object):
     created = db.Column(db.DateTime, default=db.func.now())
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     @declared_attr
-    def creator(cls):
+    def creator_id(cls):
         return db.Column('creator', db.ForeignKey('user.id'))
 
     @declared_attr
-    def last_modified_by(cls):
+    def last_modified_by_id(cls):
         return db.Column('last_modified_by', db.ForeignKey('user.id'))
 
     @declared_attr
@@ -64,6 +74,12 @@ class Item(MetaDataMixin, db.Model):
     width = db.Column(db.Integer)
     length = db.Column(db.Integer)
     height = db.Column(db.Integer)
+    creator = db.relationship('User', foreign_keys='Item.creator_id')
+    last_modified_by = db.relationship(
+        'User',
+        foreign_keys='Item.last_modified_by_id'
+    )
+
 
 
 class DeliveryJob(MetaDataMixin, db.Model):
@@ -73,3 +89,8 @@ class DeliveryJob(MetaDataMixin, db.Model):
     pickup_address_additional_info = db.Column(db.Text)
     drop_off_address = db.Column(db.String(120))
     drop_off_additional_info = db.Column(db.Text)
+    creator = db.relationship('User', foreign_keys='Item.creator_id')
+    last_modified_by = db.relationship(
+        'User',
+        foreign_keys='Item.last_modified_by_id'
+    )
