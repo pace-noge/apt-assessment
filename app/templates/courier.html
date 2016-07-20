@@ -1,99 +1,140 @@
-{% extends 'base.html' %}
+{% extends 'base_lte.html' %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+{% endblock %}
+
 {% block content %}
 
-<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-  <thead>
-    <tr>
-      <th class="mdl-data-table__cell--non-numeric">Name</th>
-      <th class="mdl-data-table__cell--non-numeric">Address</th>
-      <th class="mdl-data-table__cell--non-numeric">Available Time</th>
-      <th class="mdl-data-table__cell--non-numeric">Action</th>
-
-    </tr>
-  </thead>
-  <tbody>
-    {% for courier in couriers %}
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for('courier_detail', id=courier.id) }}">{{ courier.name }}</a></td>
-      <td class="mdl-data-table__cell--non-numeric">{{ courier.address }}</td>
-      <td class="mdl-data-table__cell--non-numeric">
-          {{ courier.available_time_start }} - {{ courier.available_time_stop }}
-      </td>
-      <td class="mdl-data-table__cell">
-          <div id="delete_courier_{{ courier.id }}" class="material-icons">delete
-          </div>
-          <div class="mdl-tooltip" for="delete_courier_{{ courier.id }}">
-              Delete {{ courier.name }}
-          </div>
-          </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<dialog class="mdl-dialog">
-    <form action="" method="post" name="courier">
-    <div class="mdl-dialog__content">
-      <div style="color: #e42323">
-          {% with messages = get_flashed_messages() %}
-              {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
-                  <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-              {% endif %}
-          {% endwith %}
-      </div>
-        {{ form.hidden_tag() }}
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            {{ form.name(class_="mdl-textfield__input") }}
-            <label class="mdl-textfield__label" for="sample1">{{ form.name.label.text }}</label>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Courier List</h3>
+            </div>
+            <div class="box-body">
+                <table id="courier_list" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Available Time(s)</th>
+                      <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for courier in couriers %}
+                    <tr>
+                      <td>{{ courier.name }}</td>
+                      <td>{{ courier.address }}</td>
+                      <td>{{ courier.available_time_start }} - {{ courier.available_time_stop }}</td>
+                      <td>Delete {{ courier.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+              </table>
+            </div>
         </div>
-
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            {{ form.address(class_="mdl-textfield__input") }}
-            <label class="mdl-textfield__label" for="sample1">{{ form.address.label.text }}</label>
-        </div>
-
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            {{ form.available_time_start(class_="mdl-textfield__input") }}
-            <label class="mdl-textfield__label">
-               {{ form.available_time_start.label.text }}
-            </label>
-        </div>
-
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            {{ form.available_time_stop(class_="mdl-textfield__input") }}
-            <label class="mdl-textfield__label">
-               {{ form.available_time_stop.label.text }}
-            </label>
-        </div>
-
     </div>
-    <div class="mdl-dialog__actions mdl-dialog__actions">
-      <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">Save</button>
-      <button type="button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect close">Cancel</button>
-    </div>
-    </form>
-  </dialog>
+</div>
 
-  <button id="view-source" class="mdl-button mdl-button--fab mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-color-text--white show-modal"><i class="material-icons">add</i><span class="mdl-button__ripple-container"><span class="mdl-ripple is-animating" style="width: 255.952px; height: 255.952px; transform: translate(-50%, -50%) translate(26px, 19px);"></span></span></button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-courier-modal">Add</button>
+
+<div class="modal fade add-courier-modal modal-info" tabindex="-1" role="dialog" aria-labelledby="courierLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add New Courier</h4>
+            </div>
+
+            <form action="" method="post" name="courier">
+            <div class="modal-body">
+                <div style="color: #e42323">
+                  {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                          <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}
+                  {% endwith %}
+                </div>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="{{ form.name.id }}">{{ form.name.label.text }}</label>
+                        {{ form.name(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.address.id }}">{{ form.address.label.text }}</label>
+                        {{ form.address(class_="form-control") }}
+                    </div>
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                            <label for="{{ form.available_time_start.id }}">{{ form.available_time_start.label.text }}</label>
+                            <div class="input-group">
+                                {{ form.available_time_start(class_="form-control timepicker") }}
+                                <div class="input-group-addon">
+                                  <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                          <label>{{ form.available_time_stop.label.text }}</label>
+
+                          <div class="input-group">
+                                {{ form.available_time_stop(class_="form-control timepicker") }}
+
+                            <div class="input-group-addon">
+                              <i class="fa fa-clock-o"></i>
+                            </div>
+                          </div>
+                          <!-- /.input group -->
+                        </div>
+                        <!-- /.form group -->
+                    </div>
+
+
+
+                  </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
 {% block extra_js %}
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script>
-    var dialog = document.querySelector('dialog');
-    var showModalButton = document.querySelector('.show-modal');
-    if (! dialog.showModal) {
-      dialogPolyfill.registerDialog(dialog);
-    }
-    showModalButton.addEventListener('click', function() {
-      dialog.showModal();
+    $(function() {
+        $("#courier_list").DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
     });
-    dialog.querySelector('.close').addEventListener('click', function() {
-      dialog.close();
+
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
     });
   </script>
 {% endblock %}

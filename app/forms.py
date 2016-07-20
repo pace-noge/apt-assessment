@@ -12,5 +12,5 @@ class LoginForm(Form):
 class CourierForm(Form):
     name = StringField('name', validators=[DataRequired()])
     address = TextAreaField('address', validators=[DataRequired()])
-    available_time_start = TimeField('available from', validators=[DataRequired()])
-    available_time_stop = TimeField('Available until', validators=[DataRequired()])
+    available_time_start = StringField('available from', validators=[DataRequired()])
+    available_time_stop = StringField('Available until', validators=[DataRequired()])

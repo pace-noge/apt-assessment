@@ -1,7 +1,8 @@
 from app import app, db, lm
 from .forms import LoginForm, CourierForm
 from .models import User, Courier, Item, DeliveryJob
-from datetime import time
+from datetime import time as d_time
+import time
 from flask import render_template, flash, redirect
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -42,8 +43,8 @@ def courier_list():
     if form.validate_on_submit():
         name = form.name.data
         address = form.address.data
-        available_time_start = form.available_time_start.data
-        available_time_stop = form.available_time_stop.data
+        available_time_start = convert_12_to_24(form.available_time_start.data)
+        available_time_stop = convert_12_to_24(form.available_time_stop.data)
         courier = Courier(
             name=name,
             address=address,
@@ -67,7 +68,8 @@ def courier_list():
 def courier_detail(id):
     courier = Courier.query.get(id)
     if courier is not None:
-        return render_template('courier_detail.html', courier=courier, page_title=courier.name)
+        form = CourierForm(obj=courier)
+        return render_template('courier_detail.html', courier=courier, page_title=courier.name, form=form)
     else:
         return page_not_found(courier)
 
@@ -91,3 +93,12 @@ def flash_error(form):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
+
+@app.route("/lte")
+def lte():
+    return render_template('base_lte.html')
+
+def convert_12_to_24(str_time):
+    s = time.strptime(str_time, "%I:%M %p")
+    return d_time(s.tm_hour, s.tm_min)
