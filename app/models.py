@@ -1,5 +1,5 @@
 from app import db
-
+from sqlalchemy.ext.declarative import declared_attr
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,17 +27,24 @@ class User(db.Model):
         return '<User %r>' % (self.username)
 
 
-class ModelBase(db.Model):
-
-    __abstract__ = True
-
+class MetaDataMixin(object):
     created = db.Column(db.DateTime, default=db.func.now())
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
-    creator = db.Column(db.Integer, db.ForeignKey('user.id'))
-    last_modified_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    @declared_attr
+    def creator(cls):
+        return db.Column('creator', db.ForeignKey('user.id'))
+
+    @declared_attr
+    def last_modified_by(cls):
+        return db.Column('last_modified_by', db.ForeignKey('user.id'))
+
+    @declared_attr
+    def user(cls):
+        return db.relationship("User")
 
 
-class Courier(ModelBase):
+class Courier(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     name = db.Column(db.String(64), index=True)
@@ -49,7 +56,7 @@ class Courier(ModelBase):
         return '<Courier %r>' % (self.name)
 
 
-class Item(ModelBase):
+class Item(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
     item_type = db.Column(db.String)
@@ -59,15 +66,10 @@ class Item(ModelBase):
     height = db.Column(db.Integer)
 
 
-class DeliveryJob(ModelBase):
+class DeliveryJob(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     courier = db.Column(db.Integer, db.ForeignKey('courier.id'))
     pickup_address = db.column(db.String(120))
     pickup_address_additional_info = db.Column(db.Text)
     drop_off_address = db.Column(db.String(120))
     drop_off_additional_info = db.Column(db.Text)
-
-
-    def __repr__(self):
-        return '<DeliveryJob %r %r %r>' % (self.courier.name, self.)
-
