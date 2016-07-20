@@ -14,18 +14,12 @@
   <tbody>
     {% for courier in couriers %}
     <tr>
-      <td class="mdl-data-table__cell">{{ courier.name }}</td>
-      <td class="mdl-data-table__cell">{{ courier.address }}</td>
-      <td class="mdl-data-table__cell">
+      <td class="mdl-data-table__cell--non-numeric"><a href="{{ url_for('courier_detail', id=courier.id) }}">{{ courier.name }}</a></td>
+      <td class="mdl-data-table__cell--non-numeric">{{ courier.address }}</td>
+      <td class="mdl-data-table__cell--non-numeric">
           {{ courier.available_time_start }} - {{ courier.available_time_stop }}
       </td>
       <td class="mdl-data-table__cell">
-          <div id="edit_courier_{{ courier.id }}" class="material-icons">
-              mode_edit
-          </div>
-          <div class="mdl-tooltip" for="edit_courier_{{ courier.id }}">
-              Edit {{ courier.name }}
-          </div> &nbsp;
           <div id="delete_courier_{{ courier.id }}" class="material-icons">delete
           </div>
           <div class="mdl-tooltip" for="delete_courier_{{ courier.id }}">
@@ -40,30 +34,41 @@
 <dialog class="mdl-dialog">
     <form action="" method="post" name="courier">
     <div class="mdl-dialog__content">
-                    {{ form.hidden_tag() }}
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        {{ form.name(class_="mdl-textfield__input") }}
-                        <label class="mdl-textfield__label" for="sample1">{{ form.name.label.text }}</label>
-                    </div>
+      <div style="color: #e42323">
+          {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              {% endif %}
+          {% endwith %}
+      </div>
+        {{ form.hidden_tag() }}
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            {{ form.name(class_="mdl-textfield__input") }}
+            <label class="mdl-textfield__label" for="sample1">{{ form.name.label.text }}</label>
+        </div>
 
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        {{ form.address(class_="mdl-textfield__input") }}
-                        <label class="mdl-textfield__label" for="sample1">{{ form.address.label.text }}</label>
-                    </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            {{ form.address(class_="mdl-textfield__input") }}
+            <label class="mdl-textfield__label" for="sample1">{{ form.address.label.text }}</label>
+        </div>
 
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        {{ form.available_time_start(class_="mdl-textfield__input") }}
-                        <label class="mdl-textfield__label">
-                           {{ form.available_time_start.label.text }}
-                        </label>
-                    </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            {{ form.available_time_start(class_="mdl-textfield__input") }}
+            <label class="mdl-textfield__label">
+               {{ form.available_time_start.label.text }}
+            </label>
+        </div>
 
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        {{ form.available_time_stop(class_="mdl-textfield__input") }}
-                        <label class="mdl-textfield__label">
-                           {{ form.available_time_stop.label.text }}
-                        </label>
-                    </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            {{ form.available_time_stop(class_="mdl-textfield__input") }}
+            <label class="mdl-textfield__label">
+               {{ form.available_time_stop.label.text }}
+            </label>
+        </div>
 
     </div>
     <div class="mdl-dialog__actions mdl-dialog__actions">
