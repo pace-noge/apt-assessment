@@ -42,7 +42,6 @@ class User(db.Model):
     def __init__(self, **kwargs):
         pw_hash = self.set_password(kwargs['password'])
         kwargs['password'] = pw_hash
-        print(kwargs)
         super().__init__(**kwargs)
 
 
@@ -93,7 +92,6 @@ class Courier(MetaDataMixin, db.Model):
     address = db.Column(db.Text)
     available_time_start = db.Column(db.Time)
     available_time_stop = db.Column(db.Time)
-    delivery_jobs = db.relationship('DeliveryJob', backref='courier', lazy='dynamic')
 
     def __repr__(self):
         return '<Courier %r>' % (self.name)
@@ -102,7 +100,6 @@ class Courier(MetaDataMixin, db.Model):
 
 class DeliveryJob(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    courier = db.Column(db.Integer, db.ForeignKey('courier.id'))
     pickup_address = db.column(db.String(120))
     pickup_address_additional_info = db.Column(db.Text)
     pickup_time = db.Column(db.DateTime)
@@ -110,6 +107,9 @@ class DeliveryJob(MetaDataMixin, db.Model):
     drop_off_additional_info = db.Column(db.Text)
     delivered_time = db.Column(db.DateTime)
     item = db.Column(db.Text)
+    courier_id = db.Column(db.Integer, db.ForeignKey('courier.id'))
+    courier = db.relationship('Courier',
+        backref=db.backref('delivery_jobs', lazy='dynamic'))
 
     def __repr__(self):
         return "<DeliveyJob %r>" % self.courier

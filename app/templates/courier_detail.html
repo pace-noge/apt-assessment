@@ -1,5 +1,9 @@
 {% extends 'base_lte.html' %}
 
+{% block extra_head %}
+    <link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+{% endblock %}
+
 {% block content %}
 
 <div class="row">
@@ -23,6 +27,9 @@
                         </a>
                     </li>
                 </ul>
+            </div>
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-courier-modal">Update</button>
             </div>
         </div>
     </div>
@@ -54,7 +61,83 @@
     </div>
 </div>
 
-{{ form.name }}
+<div class="modal fade add-courier-modal modal-info" tabindex="-1" role="dialog" aria-labelledby="courierLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update-{{ courier.name }}</h4>
+            </div>
+
+            <form action="" method="post" name="courier">
+            <div class="modal-body">
+                <div style="color: #e42323">
+                  {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                          <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}
+                  {% endwith %}
+                </div>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="{{ form.name.id }}">{{ form.name.label.text }}</label>
+                        {{ form.name(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.address.id }}">{{ form.address.label.text }}</label>
+                        {{ form.address(class_="form-control") }}
+                    </div>
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                            <label for="{{ form.available_time_start.id }}">{{ form.available_time_start.label.text }}</label>
+                            <div class="input-group">
+                                {{ form.available_time_start(class_="form-control timepicker") }}
+                                <div class="input-group-addon">
+                                  <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                          <label>{{ form.available_time_stop.label.text }}</label>
+
+                          <div class="input-group">
+                                {{ form.available_time_stop(class_="form-control timepicker") }}
+
+                            <div class="input-group-addon">
+                              <i class="fa fa-clock-o"></i>
+                            </div>
+                          </div>
+                          <!-- /.input group -->
+                        </div>
+                        <!-- /.form group -->
+                    </div>
+
+
+
+                  </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-primary">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 
 <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-cell--4-col-phone">
     <div class="mdl-card__title">
@@ -105,4 +188,16 @@
 </div>
 
 
+{% endblock %}
+
+{% block extra_js %}
+    <script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script>
+    $(function() {
+
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+    });
+  </script>
 {% endblock %}

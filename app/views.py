@@ -69,6 +69,15 @@ def courier_detail(id):
     courier = Courier.query.get(id)
     if courier is not None:
         form = CourierForm(obj=courier)
+        if form.validate_on_submit():
+            courier.name = form.name.data
+            courier.address = form.address.data
+            courier.available_time_start = convert_12_to_24(form.available_time_start.data)
+            courier.available_time_stop = convert_12_to_24(form.available_time_stop.data)
+            courier.last_modified_by = current_user
+            db.session.add(courier)
+            db.session.commit()
+            return redirect("/couriers/%s/" % courier.id)
         return render_template('courier_detail.html', courier=courier, page_title=courier.name, form=form)
     else:
         return page_not_found(courier)
