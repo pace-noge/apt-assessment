@@ -34,4 +34,8 @@ python create_admin.py
 python run.py
 ```
 
+please refer to [python pip](https://docs.python.org/3/tutorial/venv.html) for more reference using pip for installing python lib
 
+
+##### Application Usage:
+After installation of requirements complete, and you already create user, you can start to use this apps by point your browser to [Courier Service](http://localhost:5000/) the login page will show up. Please enter your credential that you create before.
