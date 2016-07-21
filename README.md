@@ -54,6 +54,42 @@ After installation of requirements complete, and you already create user, you ca
 access to Courier list can be done by clicking on Courier menu at sidebar, then the courier list page will show
 ![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/courier_list.png 'courier list')
 
-#### Create new courier
+##### Create new courier
 on Courier list page, click at Add button, then the modal form for creating new courier will pop up
-![alt text]( 'New Courier')
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/new_courier.png 'New Courier')
+
+##### Courier detail
+to access the courier detail you can click at courier name
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/courier_detail.png 'Courier Detail')
+
+##### Update Courier
+to update courier just click at the update button then, form for updating the courier will pop up
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/update_courier.png 'Update Courier')
+
+##### Deleting Courier
+to delete courier just click on trash icon at Courier List Page
+
+#### Delivery Jobs
+##### Delivery Job List
+access to Delivery Job List can be done by clicking on Delivery jobs menu at sidebar, then the delivery jobs list page will show
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/dj_lists.png 'Delivery jobs list')
+
+##### Create new courier
+on Delivery Jobs list page, click at Add button, then the modal form for creating new delivery jobs will pop up
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/new_dj.png 'New Jobs')
+
+##### Delivery job detail
+to access the Delivery job detail you can click at delivery job pickup address link
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/dj_detail.png 'Delivery jobs Detail')
+
+##### Update delivery Job
+to update Delivery job just click at the update button then form for updating the delivery jobs will pop up
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/update_dj.png 'Update Job')
+
+##### Deleting Delivery Job
+to delete job, please click at the trash button on job detail
+
+#### Logout
+klik on user name on top right, the link for sign out will be shown click the link to logout
+
+![alt text](https://raw.githubusercontent.com/pace-noge/apt-assessment/master/docs/logout.png 'Logout')
