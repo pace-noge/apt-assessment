@@ -10,17 +10,26 @@ from flask_login import login_user, logout_user, current_user, login_required
 
 @lm.user_loader
 def load_user(id):
+    """
+    flask-login query to get User ID
+    """
     return User.query.get(id)
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
+    """
+    Home Page
+    """
     return render_template('index.html', title='Home Page')
 
 @app.route('/login', methods=['GET', 'POST'])
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
+    """
+    Login user from login page
+    """
     if current_user.is_authenticated:
         return redirect('/')
     form = LoginForm()
@@ -43,6 +52,9 @@ def login():
 @app.route('/couriers/', methods=['GET', 'POST'])
 @login_required
 def courier_list():
+    """
+    Display the Couriers from db, add form for add new Courier
+    """
     form = CourierForm()
     if form.validate_on_submit():
         name = form.name.data
@@ -75,6 +87,10 @@ def courier_list():
 @app.route('/couriers/<id>/', methods=['GET', 'POST'])
 @login_required
 def courier_detail(id):
+    """
+    Get Courier by id,
+    If not found return 404
+    """
     courier = Courier.query.get(id)
     if courier is not None:
         form = CourierForm(obj=courier)
@@ -100,6 +116,9 @@ def courier_detail(id):
 @app.route("/couriers/<id>/delete/")
 @login_required
 def delete_courier(id):
+    """
+    Delete Courier Based on ID
+    """
     courier = Courier.query.filter_by(id=id)
     if courier is not None:
         courier.delete()
@@ -111,7 +130,11 @@ def delete_courier(id):
 
 @app.route('/delivery-jobs', methods=['GET', 'POST'])
 @app.route('/delivery-jobs/', methods=['GET', 'POST'])
+@login_required
 def delivery_jobs():
+    """
+    List of Delivery Jobs, and form for adding new Delivery Jobs
+    """
     jobs = DeliveryJob.query.all()
     form = DeliveryJobForm()
     if form.validate_on_submit():
@@ -151,7 +174,12 @@ def delivery_jobs():
 
 
 @app.route('/delivery-jobs/<id>/', methods=["GET", "POST"])
+@login_required
 def dj_detail(id):
+    """
+    Get delivery Jobs detail,
+    if request method == POST, then update current id
+    """
     d = DeliveryJob.query.get(id)
     form = DeliveryJobForm(obj=d)
     if form.validate_on_submit():
@@ -189,7 +217,11 @@ def dj_detail(id):
 
 
 @app.route('/delivery-jobs/<id>/delete/')
+@login_required
 def delete_delivery_jobs(id):
+    """
+    Delete delivery jobs based on id parameter
+    """
     d = DeliveryJob.query.filter_by(id=id)
     if d is not None:
         d.delete()
@@ -199,12 +231,19 @@ def delete_delivery_jobs(id):
 
 
 @app.route('/logout')
+@login_required
 def logout():
+    """
+    Logout User, use flask-login method
+    """
     logout_user()
     return redirect('/login')
 
 
 def flash_error(form):
+    """
+    Append all error to flash message
+    """
     for field, errors in form.errors.items():
         for error in errors:
             flash(u"Error in the %s field - %s" % (
@@ -212,20 +251,39 @@ def flash_error(form):
                   error
             ))
 
+
 @app.errorhandler(404)
 def page_not_found(e):
+    """
+    Handling 404
+    """
     return render_template("404.html"), 404
 
 
-@app.route("/lte")
-def lte():
-    return render_template('test.html')
-
 def convert_12_to_24(str_time):
+    """
+    Cnvert time to 24 Format:
+    param:
+        str_time => String
+    example:
+        "12:00 PM"
+    return python time objects
+    """
     s = time.strptime(str_time, "%I:%M %p")
     return d_time(s.tm_hour, s.tm_min)
 
 def convert_to_py_datetime(str_date, str_time):
+    """
+    Join time and date to python datetime object
+    param:
+        str_date = >String
+        str_time => String
+    example:
+        str_date => "29/04/2016"
+        str_time => "12:00 PM"
+    return:
+        python datetime object
+    """
     t = convert_12_to_24(str_time)
     d = str_date.split("/")
     return datetime(int(d[2]), int(d[1]), int(d[0]), t.hour, t.minute)
