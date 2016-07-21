@@ -53,8 +53,22 @@
                             <th>Drop Off Location</th>
                             <th>Drop Off address info</th>
                             <th>Delivered time</th>
+                            <th>Item</th>
                         </tr>
                     </thead>
+                     <tbody>
+                        {% for d in courier.delivery_jobs.all() %}
+                            <tr>
+                                <td>{{ d.pickup_address }}</td>
+                                <td>{{ d.pickup_address_additional_info }}</td>
+                                <td>{{ d.pickup_time }}</td>
+                                <td>{{ d.drop_off_address }}</td>
+                                <td>{{ d.drop_off_additional_info }}</td>
+                                <td>{{ d.delivered_time }}</td>
+                                <td>{{ d.item }}</td>
+                            </tr>
+                        {% endfor %}
+                     </tbody>
                 </table>
             </div>
         </div>
@@ -183,7 +197,7 @@
       <h4>History</h4>
   </div>
   <div class="mdl-card__supporting-text">
-        history
+
   </div>
 </div>
 

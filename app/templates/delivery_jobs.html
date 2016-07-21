@@ -1,0 +1,210 @@
+{% extends 'base_lte.html' %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="/static/plugins/datepicker/datepicker3.css">
+    <link rel="stylesheet" href="/static/plugins/timepicker/bootstrap-timepicker.min.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Courier List</h3>
+            </div>
+            <div class="box-body">
+                <table id="jobs_list" class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                      <th>Pickup Address</th>
+                      <th>Pickup Address info</th>
+                      <th>Pickup Time</th>
+                      <th>Drop Off Address</th>
+                      <th>Drop Off Address Info</th>
+                      <th>Delivered Time</th>
+                      <th>Item</th>
+                      <th>Courier</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                      <td>
+                          <a href="#">{{ job.pickup_address }}</a>
+                      </td>
+                      <td>{{ job.pickup_address_additional_info }}</td>
+                      <td>{{ job.pickup_time }}</td>
+                      <td>{{ job.drop_off_address }}</td>
+                      <td>{{ job.drop_off_additional_info }}</td>
+                      <td>{{ job.delivered_time }}</td>
+                      <td>{{ job.item }}</td>
+                      <td><a href="{{ url_for('courier_detail', id=job.courier.id) }}">{{ job.courier.name }}</a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-courier-modal">Add</button>
+
+<div class="modal fade add-courier-modal modal-info" tabindex="-1" role="dialog" aria-labelledby="courierLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add New Delivery Jobs</h4>
+            </div>
+
+            <form action="" method="post" name="courier">
+            <div class="modal-body">
+                <div style="color: #e42323">
+                  {% with messages = get_flashed_messages() %}
+                      {% if messages %}
+                        <ul class=flashes>
+                        {% for message in messages %}
+                          <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                      {% endif %}
+                  {% endwith %}
+                </div>
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="{{ form.pickup_address.id }}">{{ form.pickup_address.label.text }}</label>
+                        {{ form.pickup_address(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.pickup_address_additional_info.id }}">{{ form.pickup_address_additional_info.label.text }}</label>
+                        {{ form.pickup_address_additional_info(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.pickup_date.id }}">{{ form.pickup_date.label.text }}</label>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        {{ form.pickup_date(class_="form-control pull-right") }}
+                        </div>
+                    </div>
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                            <label for="{{ form.pickup_time.id }}">{{ form.pickup_time.label.text }}</label>
+                            <div class="input-group">
+                                {{ form.pickup_time(class_="form-control timepicker") }}
+                                <div class="input-group-addon">
+                                  <i class="fa fa-clock-o"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.drop_off_address.id }}">{{ form.drop_off_address.label.text }}</label>
+                        {{ form.drop_off_address(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.drop_off_additional_info.id }}">{{ form.drop_off_additional_info.label.text }}</label>
+                        {{ form.drop_off_additional_info(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.deliver_date.id }}">{{ form.deliver_date.label.text }}</label>
+                        {{ form.deliver_date(class_="form-control") }}
+                    </div>
+
+                    <div class="bootstrap-timepicker">
+                        <div class="form-group">
+                          <label>{{ form.delivered_time.label.text }}</label>
+
+                          <div class="input-group">
+                                {{ form.delivered_time(class_="form-control timepicker") }}
+
+                            <div class="input-group-addon">
+                              <i class="fa fa-clock-o"></i>
+                            </div>
+                          </div>
+                          <!-- /.input group -->
+                        </div>
+                        <!-- /.form group -->
+                    </div>
+
+                     <div class="form-group">
+                        <label for="{{ form.item.id }}">{{ form.item.label.text }}</label>
+                        {{ form.item(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.courier.id }}">{{ form.courier.label.text }}</label>
+                        {{ form.courier(class_="form-control") }}
+                    </div>
+
+                    <div class="form-group">
+                <label>Date:</label>
+
+                <div class="input-group date">
+                  <div class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                  </div>
+                  <input type="text" class="form-control pull-right" id="datepicker">
+                </div>
+                <!-- /.input group -->
+              </div>
+              <!-- /.form group -->
+
+                  </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-default">Save</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/static/plugins/datepicker/bootstrap-datepicker.js"></script>
+<script>
+    $(function() {
+
+    $("#jobs_list").DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+
+    $('#{{ form.pickup_date.id }}').datepicker({
+      autoclose: true
+    });
+
+    $('#{{ form.deliver_date.id }}').datepicker({
+      autoclose: true
+    });
+
+    $('#datepicker').datepicker({
+      autoclose: true
+    });
+
+    $(".timepicker").timepicker({
+      showInputs: false
+    });
+    });
+  </script>
+{% endblock %}

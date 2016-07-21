@@ -1,5 +1,5 @@
 from app import app, db, lm
-from .forms import LoginForm, CourierForm
+from .forms import LoginForm, CourierForm, DeliveryJobForm
 from .models import User, Courier, DeliveryJob
 from datetime import time as d_time
 import time
@@ -19,7 +19,10 @@ def index():
     return render_template('index.html', title='Home Page')
 
 @app.route('/login', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect('/')
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -34,6 +37,7 @@ def login():
         title='Login',
         form=form
     )
+
 
 @app.route('/couriers', methods=['GET', 'POST'])
 @app.route('/couriers/', methods=['GET', 'POST'])
@@ -60,7 +64,12 @@ def courier_list():
         flash_error(form)
 
     couriers = Courier.query.all()
-    return render_template('courier.html', page_title="Couriers", couriers=couriers, form=form)
+    return render_template(
+            'courier.html',
+            page_title="Couriers",
+            couriers=couriers,
+            form=form
+        )
 
 
 @app.route('/couriers/<id>/', methods=['GET', 'POST'])
@@ -78,11 +87,37 @@ def courier_detail(id):
             db.session.add(courier)
             db.session.commit()
             return redirect("/couriers/%s/" % courier.id)
-        return render_template('courier_detail.html', courier=courier, page_title=courier.name, form=form)
+        return render_template(
+                    'courier_detail.html',
+                    courier=courier,
+                    page_title=courier.name,
+                    form=form
+                )
     else:
         return page_not_found(courier)
 
 
+@app.route("/couriers/<id>/delete/")
+@login_required
+def delete_courier(id):
+    courier = Courier.query.filter_by(id=id)
+    if courier is not None:
+        courier.delete()
+        db.session.commit()
+        return redirect('/couriers/')
+    else:
+        return page_not_found(courier)
+
+
+@app.route('/delivery-jobs', methods=['GET', 'POST'])
+@app.route('/delivery-jobs/', methods=['GET', 'POST'])
+def delivery_jobs():
+    jobs = DeliveryJob.query.all()
+    form = DeliveryJobForm()
+    if form.validate_on_submit():
+        print(form)
+        p_address = form.pickup_address.data
+    return render_template('delivery_jobs.html', jobs=jobs, form=form)
 
 
 @app.route('/logout')

@@ -100,7 +100,7 @@ class Courier(MetaDataMixin, db.Model):
 
 class DeliveryJob(MetaDataMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    pickup_address = db.column(db.String(120))
+    pickup_address = db.Column(db.String(120))
     pickup_address_additional_info = db.Column(db.Text)
     pickup_time = db.Column(db.DateTime)
     drop_off_address = db.Column(db.String(120))
@@ -112,4 +112,4 @@ class DeliveryJob(MetaDataMixin, db.Model):
         backref=db.backref('delivery_jobs', lazy='dynamic'))
 
     def __repr__(self):
-        return "<DeliveyJob %r>" % self.courier
+        return "<DeliveyJob %r>" % self.id

@@ -25,10 +25,12 @@
                     <tbody>
                     {% for courier in couriers %}
                     <tr>
-                      <td>{{ courier.name }}</td>
+                      <td>
+                          <a href="{{ url_for('courier_detail', id= courier.id) }}">{{ courier.name }}</a>
+                      </td>
                       <td>{{ courier.address }}</td>
                       <td>{{ courier.available_time_start }} - {{ courier.available_time_stop }}</td>
-                      <td>Delete {{ courier.name }}</td>
+                      <td><a href="{{ url_for('delete_courier', id=courier.id) }}"><i class="fa fa-trash text-danger"></i></a></td>
                     </tr>
                     {% endfor %}
                     </tbody>
@@ -123,7 +125,7 @@
 <script src="/static/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 <script>
     $(function() {
-        $("#courier_list").DataTable({
+    $("#courier_list").DataTable({
       "paging": true,
       "lengthChange": false,
       "searching": false,
