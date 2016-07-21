@@ -16,6 +16,7 @@ class CourierForm(Form):
     available_time_start = StringField('available from', validators=[DataRequired()])
     available_time_stop = StringField('Available until', validators=[DataRequired()])
 
+
 class DeliveryJobForm(Form):
     pickup_address = StringField(
                         'Pickup Address',
@@ -41,4 +42,8 @@ class DeliveryJobForm(Form):
     item = StringField('Item', validators=[DataRequired()])
     courier = SelectField(
                 u'Courier',
-                choices=[(c.id, c.name) for c in Courier.query.all()])
+                choices=[
+                    (c.id, c.name) for c in Courier.query.all()
+                    ],
+                coerce=int
+            )
