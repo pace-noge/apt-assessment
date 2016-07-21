@@ -10,48 +10,69 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="box">
-            <div class="box-header">
+            <div class="box-header with-border">
                 <h3 class="box-title">Delivery Jobs</h3>
             </div>
             <div class="box-body">
-                <table id="jobs_list" class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                      <th>Pickup Address</th>
-                      <th>Pickup Address info</th>
-                      <th>Pickup Time</th>
-                      <th>Drop Off Address</th>
-                      <th>Drop Off Address Info</th>
-                      <th>Delivered Time</th>
-                      <th>Item</th>
-                      <th>Courier</th>
-
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for job in jobs %}
-                    <tr>
-                      <td>
-                          <a href="{{ url_for('dj_detail', id=job.id) }}">{{ job.pickup_address }}</a>
-                      </td>
-                      <td>{{ job.pickup_address_additional_info }}</td>
-                      <td>{{ job.pickup_time }}</td>
-                      <td>{{ job.drop_off_address }}</td>
-                      <td>{{ job.drop_off_additional_info }}</td>
-                      <td>{{ job.delivered_time }}</td>
-                      <td>{{ job.item }}</td>
-                      <td><a href="{{ url_for('courier_detail', id=job.courier.id) }}">{{ job.courier.name }}</a></td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-              </table>
+                <strong>
+                    Pickup Address
+                </strong>
+                <p class="text-muted">
+                    {{ job.pickup_address }}
+                </p><hr />
+                <strong>
+                    Pick Up Additional Info
+                </strong>
+                <p class="text-muted">
+                    {{ job.pickup_address_additional_info }}
+                </p><hr />
+                <strong>
+                    Pick Up Time
+                </strong>
+                <p class="text-muted">
+                    {{ job.pickup_time }}
+                </p><hr />
+                <strong>
+                    Drop Off address
+                </strong>
+                <p class="text-muted">
+                    {{ job.drop_off_address }}
+                </p><hr />
+                <strong>
+                    Drop Off Additional Info
+                </strong>
+                <p class="text-muted">
+                    {{ job.drop_off_additional_info }}
+                </p><hr />
+                <strong>
+                    Delivered Time
+                </strong>
+                <p class="text-muted">
+                    {{ job.delivered_time }}
+                </p><hr />
+                <strong>
+                    Item
+                </strong>
+                <p class="text-muted">
+                    {{ job.item }}
+                </p><hr />
+                <strong>
+                    Courier
+                </strong>
+                <p class="text-muted">
+                    <a href="{{ url_for('courier_detail', id=job.courier.id) }}">{{ job.courier.name }}</a>
+                </p>
+            </div>
+            <div class="box-footer">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".add-courier-modal">Update</button>
+                &nbsp;&nbsp;
+                <a href="{{ url_for('delete_delivery_jobs', id=job.id) }}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
             </div>
         </div>
     </div>
 </div>
 
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".add-courier-modal">Add</button>
 
 <div class="modal fade add-courier-modal modal-info" tabindex="-1" role="dialog" aria-labelledby="courierLabel">
     <div class="modal-dialog">

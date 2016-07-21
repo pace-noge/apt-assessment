@@ -137,7 +137,8 @@ def delivery_jobs():
             drop_off_additional_info=drop_off_additional_info,
             delivered_time=delivered_time,
             item=item,
-            courier=courier
+            courier=courier,
+            creator=current_user
         )
         db.session.add(d)
         db.session.commit()
@@ -146,6 +147,55 @@ def delivery_jobs():
     else:
         flash_error(form)
     return render_template('delivery_jobs.html', jobs=jobs, form=form)
+
+
+
+@app.route('/delivery-jobs/<id>/', methods=["GET", "POST"])
+def dj_detail(id):
+    d = DeliveryJob.query.get(id)
+    form = DeliveryJobForm(obj=d)
+    if form.validate_on_submit():
+        pickup_address = form.pickup_address.data
+        pickup_address_additional_info = form.pickup_address_additional_info.data
+        pickup_time = convert_to_py_datetime(
+            form.pickup_date.data,
+            form.pickup_time.data
+        )
+        drop_off_address = form.drop_off_address.data
+        drop_off_additional_info = form.drop_off_additional_info.data
+        delivered_time = convert_to_py_datetime(
+            form.deliver_date.data,
+            form.delivered_time.data
+        )
+        print(type(delivered_time))
+        item = form.item.data
+        courier = Courier.query.get(form.courier.data)
+
+        d.pickup_address=pickup_address
+        d.pickup_address_additional_info=pickup_address_additional_info
+        d.pickup_time=pickup_time
+        d.drop_off_address=drop_off_address
+        d.drop_off_additional_info=drop_off_additional_info
+        d.delivered_time=delivered_time
+        d.item=item
+        d.courier=courier
+        d.last_modified_by = current_user
+        db.session.add(d)
+        db.session.commit()
+        return redirect('/delivery-jobs/%s/' % d.id)
+    else:
+        flash_error(form)
+    return render_template('delivery_job_detail.html', job=d, form=form)
+
+
+@app.route('/delivery-jobs/<id>/delete/')
+def delete_delivery_jobs(id):
+    d = DeliveryJob.query.filter_by(id=id)
+    if d is not None:
+        d.delete()
+        db.commit()
+        return redirect('/delivery-jobs/')
+    return page_not_found(d)
 
 
 @app.route('/logout')
